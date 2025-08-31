@@ -5,8 +5,6 @@ import com.bazen.management.entity.Bazen;
 import com.bazen.management.exception.ResourceNotFoundException;
 import com.bazen.management.repository.OdrzavanjeRepository;
 import com.bazen.management.repository.BazenRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,6 @@ import java.util.Optional;
 @Service
 public class OdrzavanjeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OdrzavanjeService.class);
-
     @Autowired
     private OdrzavanjeRepository odrzavanjeRepository;
 
@@ -26,23 +22,18 @@ public class OdrzavanjeService {
     private BazenRepository bazenRepository;
 
     public List<Odrzavanje> getAllOdrzavanje() {
-        logger.debug("Dohvatanje svih održavanja");
         return odrzavanjeRepository.findAll();
     }
 
     public Optional<Odrzavanje> getOdrzavanjeById(Long id) {
-        logger.debug("Dohvatanje održavanja sa ID: {}", id);
         return odrzavanjeRepository.findById(id);
     }
 
     public Odrzavanje saveOdrzavanje(Odrzavanje odrzavanje) {
-        logger.info("Kreiranje novog održavanja za bazen ID: {}", odrzavanje.getBazen().getId());
         return odrzavanjeRepository.save(odrzavanje);
     }
 
     public Odrzavanje createOdrzavanje(Long bazenId, String opisRadova, LocalDateTime datumPocetka, Integer predvidjenoTrajanjeSati) {
-        logger.info("Kreiranje održavanja za bazen ID: {}", bazenId);
-        
         Bazen bazen = bazenRepository.findById(bazenId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bazen nije pronađen sa ID: " + bazenId));
         
@@ -52,8 +43,6 @@ public class OdrzavanjeService {
     }
 
     public Odrzavanje updateOdrzavanje(Long id, Odrzavanje odrzavanjeDetails) {
-        logger.info("Ažuriranje održavanja sa ID: {}", id);
-        
         Odrzavanje odrzavanje = odrzavanjeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Održavanje nije pronađeno sa ID: " + id));
 
@@ -68,8 +57,6 @@ public class OdrzavanjeService {
     }
 
     public void deleteOdrzavanje(Long id) {
-        logger.info("Brisanje održavanja sa ID: {}", id);
-        
         Odrzavanje odrzavanje = odrzavanjeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Održavanje nije pronađeno sa ID: " + id));
 
@@ -77,8 +64,6 @@ public class OdrzavanjeService {
     }
 
     public List<Odrzavanje> getOdrzavanjeByBazen(Long bazenId) {
-        logger.debug("Dohvatanje održavanja za bazen sa ID: {}", bazenId);
-        
         Bazen bazen = bazenRepository.findById(bazenId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bazen nije pronađen sa ID: " + bazenId));
         
@@ -86,8 +71,6 @@ public class OdrzavanjeService {
     }
 
     public List<Odrzavanje> getActiveMaintenanceForPool(Long bazenId) {
-        logger.debug("Dohvatanje aktivnog održavanja za bazen sa ID: {}", bazenId);
-        
         Bazen bazen = bazenRepository.findById(bazenId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bazen nije pronađen sa ID: " + bazenId));
         
@@ -95,8 +78,6 @@ public class OdrzavanjeService {
     }
 
     public Odrzavanje startMaintenance(Long id) {
-        logger.info("Pokretanje održavanja sa ID: {}", id);
-        
         Odrzavanje odrzavanje = odrzavanjeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Održavanje nije pronađeno sa ID: " + id));
 
@@ -105,8 +86,6 @@ public class OdrzavanjeService {
     }
 
     public Odrzavanje completeMaintenance(Long id) {
-        logger.info("Završavanje održavanja sa ID: {}", id);
-        
         Odrzavanje odrzavanje = odrzavanjeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Održavanje nije pronađeno sa ID: " + id));
 
