@@ -20,6 +20,7 @@ import java.util.Optional;
 @Service
 public class RezervacijaService {
 
+    // Keep logger only for critical capacity validation business logic
     private static final Logger logger = LoggerFactory.getLogger(RezervacijaService.class);
 
     @Autowired
@@ -32,19 +33,14 @@ public class RezervacijaService {
     private ClanRepository clanRepository;
 
     public List<Rezervacija> getAllRezervacije() {
-        logger.debug("Dohvatanje svih rezervacija");
         return rezervacijaRepository.findAll();
     }
 
     public Optional<Rezervacija> getRezervacijaById(Long id) {
-        logger.debug("Dohvatanje rezervacije sa ID: {}", id);
         return rezervacijaRepository.findById(id);
     }
 
     public Rezervacija saveRezervacija(Rezervacija rezervacija) {
-        logger.info("Kreiranje nove rezervacije za bazen ID: {} i član ID: {}", 
-                   rezervacija.getBazen().getId(), rezervacija.getClan().getId());
-        
         // Validate pool capacity - this is the critical requirement
         validatePoolCapacity(rezervacija);
         
@@ -52,9 +48,6 @@ public class RezervacijaService {
     }
 
     public Rezervacija createRezervacija(Long clanId, Long bazenId, LocalDateTime datumVreme, Integer brojOsoba) {
-        logger.info("Kreiranje rezervacije: član={}, bazen={}, datum={}, osoba={}", 
-                   clanId, bazenId, datumVreme, brojOsoba);
-        
         Clan clan = clanRepository.findById(clanId)
                 .orElseThrow(() -> new ResourceNotFoundException("Član nije pronađen sa ID: " + clanId));
         
@@ -98,6 +91,7 @@ public class RezervacijaService {
         int totalReservations = existingReservations + rezervacija.getBrojOsoba();
         int poolCapacity = rezervacija.getBazen().getKapacitet();
         
+        // Keep this logging as it's critical business logic for capacity validation
         logger.info("Validacija kapaciteta - postojeće rezervacije: {}, nova rezervacija: {}, ukupno: {}, kapacitet: {}", 
                    existingReservations, rezervacija.getBrojOsoba(), totalReservations, poolCapacity);
         
@@ -118,6 +112,7 @@ public class RezervacijaService {
                 totalReservations - poolCapacity
             );
             
+            // Keep critical logging for business requirement
             logger.error(errorMessage);
             System.err.println(errorMessage);
             
@@ -127,8 +122,6 @@ public class RezervacijaService {
     }
 
     public Rezervacija updateRezervacija(Long id, Rezervacija rezervacijaDetails) {
-        logger.info("Ažuriranje rezervacije sa ID: {}", id);
-        
         Rezervacija rezervacija = rezervacijaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rezervacija nije pronađena sa ID: " + id));
 
@@ -152,8 +145,6 @@ public class RezervacijaService {
     }
 
     public void deleteRezervacija(Long id) {
-        logger.info("Brisanje rezervacije sa ID: {}", id);
-        
         Rezervacija rezervacija = rezervacijaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rezervacija nije pronađena sa ID: " + id));
 
@@ -161,8 +152,6 @@ public class RezervacijaService {
     }
 
     public List<Rezervacija> getRezervacijeByBazen(Long bazenId) {
-        logger.debug("Dohvatanje rezervacija za bazen sa ID: {}", bazenId);
-        
         Bazen bazen = bazenRepository.findById(bazenId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bazen nije pronađen sa ID: " + bazenId));
         
@@ -170,8 +159,6 @@ public class RezervacijaService {
     }
 
     public List<Rezervacija> getRezervacijeByClan(Long clanId) {
-        logger.debug("Dohvatanje rezervacija za člana sa ID: {}", clanId);
-        
         Clan clan = clanRepository.findById(clanId)
                 .orElseThrow(() -> new ResourceNotFoundException("Član nije pronađen sa ID: " + clanId));
         
@@ -179,7 +166,6 @@ public class RezervacijaService {
     }
 
     public List<Rezervacija> getFutureRezervacije() {
-        logger.debug("Dohvatanje budućih rezervacija");
         return rezervacijaRepository.findFutureReservations(LocalDateTime.now());
     }
 }

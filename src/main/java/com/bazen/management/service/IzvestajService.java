@@ -6,8 +6,6 @@ import com.bazen.management.repository.BazenRepository;
 import com.bazen.management.repository.ClanRepository;
 import com.bazen.management.repository.RezervacijaRepository;
 import com.bazen.management.repository.OdrzavanjeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,6 @@ import java.util.Map;
 
 @Service
 public class IzvestajService {
-
-    private static final Logger logger = LoggerFactory.getLogger(IzvestajService.class);
 
     @Autowired
     private BazenRepository bazenRepository;
@@ -33,8 +29,6 @@ public class IzvestajService {
     private OdrzavanjeRepository odrzavanjeRepository;
 
     public Map<String, Object> getGeneralReport() {
-        logger.info("Generisanje opšteg izveštaja");
-        
         Map<String, Object> report = new HashMap<>();
         
         // Pool statistics
@@ -71,8 +65,6 @@ public class IzvestajService {
     }
 
     public Map<String, Object> getPoolAttendanceReport() {
-        logger.info("Generisanje izveštaja o posećenosti bazena");
-        
         Map<String, Object> report = new HashMap<>();
         List<Bazen> bazeni = bazenRepository.findAll();
         
@@ -92,8 +84,6 @@ public class IzvestajService {
     }
 
     public Map<String, Object> getMemberStatusReport() {
-        logger.info("Generisanje izveštaja o statusu članova");
-        
         Map<String, Object> report = new HashMap<>();
         
         List<Clan> aktivniClanovi = clanRepository.findByStatusClanarine(Clan.StatusClanarine.AKTIVNO);
@@ -111,8 +101,6 @@ public class IzvestajService {
     }
 
     public Map<String, Object> getRevenueReport() {
-        logger.info("Generisanje izveštaja o prihodima");
-        
         Map<String, Object> report = new HashMap<>();
         
         // This is a simplified revenue report
