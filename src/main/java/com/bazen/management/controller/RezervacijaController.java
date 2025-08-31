@@ -77,7 +77,7 @@ public class RezervacijaController {
         return ResponseEntity.ok(rezervacije);
     }
 
-    @GetMapping("/buduće")
+    @GetMapping("/buduce")
     public ResponseEntity<List<Rezervacija>> getFutureRezervacije() {
         List<Rezervacija> rezervacije = rezervacijaService.getFutureRezervacije();
         return ResponseEntity.ok(rezervacije);
